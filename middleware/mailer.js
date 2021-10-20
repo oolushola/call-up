@@ -3,18 +3,16 @@ require('dotenv').config()
 
 exports.MAILER = async (sendTo, mailSubject, content) => {
   let transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.zoho.com',
+    secure: true,
+    port: 465,
     auth: {
-      type: 'OAuth2',
       user: process.env.MAIL_SENDER,
       pass: process.env.MAIL_PASSWORD,
-      clientId: process.env.OAUTH_CLIENTID,
-      clientSecret: process.env.OAUTH_CLIENT_SECRET,
-      refreshToken: process.env.OAUTH_REFRESH_TOKEN
     }
   })
   let mailOptions = {
-    from: '"Uyi from Call Up" <noreply@callup.ng>',
+    from: '"Olushola from Call Up!"<odejobi.olushola@kayaafrica.co>',
     to: sendTo,
     subject: mailSubject,
     html: content

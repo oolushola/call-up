@@ -2,7 +2,7 @@ const { body } = require("express-validator");
 const UserModel = require("../../models/User");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { response } = require("../../middleware/response");
+const { VERIFY_TOKEN } = require("../handlers");
 
 exports.VALIDATE_SIGNUP = [
   body("name").isString().notEmpty().trim().toLowerCase(),
@@ -24,7 +24,7 @@ exports.VALIDATE_SIGNUP = [
       }
     })
     .trim(),
-  body("password").isStrongPassword().notEmpty(),
+  body("password").isStrongPassword().notEmpty().isLength({ min: 8 }),
   body("confirmPassword").custom((value, { req }) => {
     if (value !== req.body.password) {
       throw new Error("password does not match");
@@ -37,22 +37,49 @@ exports.VALIDATE_SIGNUP = [
 ];
 
 exports.VERIFY_EMAIL_CONFIRMATION = async (req, res, next) => {
-  try {
-    const emailVerificationToken = req.query.token;
-    if (!emailVerificationToken)
-      return response(
-        res,
-        403,
-        { verificationToken: null },
-        "invalid verification token"
-      );
-    const validateToken = jwt.verify(
-      emailVerificationToken,
-      process.env.SECRET_TOKEN
-    );
-    req.userId = validateToken.id;
-    next();
-  } catch (err) {
-    response(res, 500, err.message, "failed verification");
-  }
+  const confirmationCode = `bearer ${req.query.token}`;
+  VERIFY_TOKEN(req, res, next, confirmationCode);
 };
+
+exports.CHECK_LOGIN = [
+  body("email")
+    .isEmail()
+    .trim()
+    .notEmpty()
+    .custom(async (value, { _ }) => {
+      const user = await UserModel.findOne({ email: value });
+      if (!user)
+        return Promise.reject({
+          status: 404,
+          message: "user not found",
+        });
+    })
+    .normalizeEmail(),
+  body("password").isStrongPassword().notEmpty().isLength({ min: 8 }),
+];
+
+exports.CHECK_PASSWORD_RESET = [
+  body("email")
+    .isEmail()
+    .trim()
+    .notEmpty()
+    .custom(async (value, { _ }) => {
+      const user = await UserModel.findOne({ email: value });
+      if (!user)
+        return Promise.reject({
+          status: 404,
+          message: "user not found",
+        });
+    })
+    .normalizeEmail(),
+];
+
+exports.CHECK_PASSWORD_CHANGE = [
+  body("password").isStrongPassword().notEmpty().isLength({ min: 8 }),
+  body("confirmPassword").custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error("password does not match");
+    }
+    return true;
+  }),
+];
