@@ -35,10 +35,15 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  userAccess: {
+    type: String,
+    required: true,
+    default: 'super'
+  },
   lastLogin: {
     type: Date,
     default: Date.now()
-  }
+  },
 }, {
   timestamps: true
 });
