@@ -33,7 +33,6 @@ exports.VALIDATE_SIGNUP = [
   }),
   body("phoneNo").isArray().isLength({ min: 1 }).notEmpty(),
   body("userType").isString().notEmpty().trim().toLowerCase(),
-  body("phoneNo"),
 ];
 
 exports.VERIFY_EMAIL_CONFIRMATION = async (req, res, next) => {
