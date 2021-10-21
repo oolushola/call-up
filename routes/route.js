@@ -1,9 +1,11 @@
 const express = require('express')
 const routes = express.Router()
 const AuthRoute = require('./Auth')
+const TruckUnionRoute = require('./TruckUnion')
 
 routes.use(process.env.BASE_URL, [
-  AuthRoute
+  AuthRoute,
+  TruckUnionRoute
 ])
 
 module.exports = routes

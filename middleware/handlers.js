@@ -6,7 +6,7 @@ exports.GENERATE_TOKEN = (credential, duration) => {
   return jwt.sign(credential, process.env.SECRET_TOKEN, { expiresIn: `${duration}`})
 }
 
-exports.VERIFY_TOKEN = async (req, res, next, token, cb) => {
+exports.VERIFY_TOKEN = async (req, res, next, token) => {
   const checkedToken = token
   if(!checkedToken) {
     return response(
@@ -17,6 +17,7 @@ exports.VERIFY_TOKEN = async (req, res, next, token, cb) => {
     const token_ = checkedToken.split(' ')[1]
     const checker = await jwt.verify(token_, process.env.SECRET_TOKEN)
     req.userId = checker.id
+    next()
     return checker  
   }
   catch(err) {
@@ -25,3 +26,24 @@ exports.VERIFY_TOKEN = async (req, res, next, token, cb) => {
     )
   }
 }
+
+exports.SUPER_ADMIN = async (req, res, next) => {
+  const user = await UserModel.findById(req.userId)
+  if(user.userType !== "admin" && user.accessControl !== 1) {
+    return response(
+      res, 403, null, 'access denied'
+    )
+  }
+  next()
+}
+
+exports.IS_ADMIN = async (req, res, next) => {
+  const user = await UserModel.findById(req.userId)
+  if(user.userType !== "admin" && user.accessControl !== 1) {
+    return response(
+      res, 403, null, 'access denied'
+    )
+  }
+  next()
+}
+

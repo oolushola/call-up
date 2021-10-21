@@ -36,9 +36,9 @@ const UserSchema = new Schema({
     required: true,
   },
   userAccess: {
-    type: String,
+    type: Number,
     required: true,
-    default: 'super'
+    default: 1
   },
   lastLogin: {
     type: Date,
