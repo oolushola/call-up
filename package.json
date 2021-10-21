@@ -1,7 +1,7 @@
 {
   "name": "call-up",
   "engines": {
-    "node": "10.12.*"
+    "node": "12.1.*"
   },
   "version": "1.0.0",
   "description": "Project call up. A joint venture between nairagram and kaya africa technology",
