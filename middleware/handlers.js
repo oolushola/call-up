@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const { response } = require('./response')
 require('dotenv').config()
+const UserModel = require('../models/User')
 
 exports.GENERATE_TOKEN = (credential, duration) => {
   return jwt.sign(credential, process.env.SECRET_TOKEN, { expiresIn: `${duration}`})
@@ -27,9 +28,9 @@ exports.VERIFY_TOKEN = async (req, res, next, token) => {
   }
 }
 
-exports.SUPER_ADMIN = async (req, res, next) => {
+exports.isSuperAdmin = async (req, res, next) => {
   const user = await UserModel.findById(req.userId)
-  if(user.userType !== "admin" && user.accessControl !== 1) {
+  if(user.userType !== "admin" && user.userAccess !== 1) {
     return response(
       res, 403, null, 'access denied'
     )
@@ -37,13 +38,33 @@ exports.SUPER_ADMIN = async (req, res, next) => {
   next()
 }
 
-exports.IS_ADMIN = async (req, res, next) => {
+exports.isAdmin = async (req, res, next) => {
   const user = await UserModel.findById(req.userId)
-  if(user.userType !== "admin" && user.accessControl !== 1) {
+  if(user.userType !== "admin") {
     return response(
       res, 403, null, 'access denied'
     )
   }
   next()
+}
+
+exports.isLoggedIn = async(req, res, next) => {
+  try{
+    const token = req.headers['authorization']
+    if(!token) {
+      return response(
+        res, 401, null, 'unauthorized'
+      )
+    }
+    const userToken = token.split(' ')[1]
+    const tokenStatus = jwt.verify(userToken, process.env.SECRET_TOKEN)
+    req.userId = tokenStatus.id
+    next()
+  }
+  catch(err) {
+    response(
+      res, 500, err.message, 'internal server error'
+    )
+  }
 }
 

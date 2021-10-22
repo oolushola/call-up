@@ -6,7 +6,7 @@ const TruckUnionSchema = new Schema({
     type: String,
     required: true
   },
-  title: {
+  acronym: {
     type: String,
     required: true
   },

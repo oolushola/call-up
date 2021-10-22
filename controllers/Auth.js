@@ -91,7 +91,10 @@ class AuthController {
         res,
         200,
         {
+          name: user.name,
           email: user.email,
+          emailVerified: user.isEmailVerified,
+          lastLogin: user.lastLogin, 
           token,
           id: user._id,
           userType: user.userType,
