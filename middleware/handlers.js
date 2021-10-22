@@ -53,7 +53,7 @@ exports.isLoggedIn = async(req, res, next) => {
     const token = req.headers['authorization']
     if(!token) {
       return response(
-        res, 401, null, 'unauthorized'
+        res, 401, null, 'unauthorized: missing token in request header'
       )
     }
     const userToken = token.split(' ')[1]
