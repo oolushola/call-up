@@ -5,13 +5,13 @@ const { response } = require("../../../middleware/response");
 class TruckChargeController {
   static async TruckCharge(_, res, _2) {
     try {
-      const truckCharge = await TruckChargeModel.find()
+      const truckCharge = await TruckChargeModel.findOne({})
         .select("-__v -createdAt -updatedAt")
         .populate(
           "createdBy history.updates.lastUpdatedBy",
           "name userType email"
         );
-      response(res, 200, truckCharge[0], "truck charge");
+      response(res, 200, truckCharge, "truck charge");
     } catch (err) {
       response(res, 500, err.message, "internal server error");
     }
