@@ -1,6 +1,6 @@
-const CategoryModel = require("../models/Category");
+const CategoryModel = require("../../../models/admin/preferences/Category");
 const { validationResult } = require("express-validator");
-const { response } = require("../middleware/response");
+const { response } = require("../../../middleware/response");
 
 class CategoryController {
   static async allCategories(_, res, _2) {

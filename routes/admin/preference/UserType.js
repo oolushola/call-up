@@ -1,7 +1,7 @@
 const express = require('express')
-const { VALIDATE_USER_TYPE } = require('../middleware/validators/UserType')
-const UserTypeController = require('../controllers/UserType')
-const { isSuperAdmin, isAdmin, isLoggedIn } = require('../middleware/handlers')
+const { VALIDATE_USER_TYPE } = require('../../../middleware/validators/UserType')
+const UserTypeController = require('../../../controllers/admin/preferences/UserType')
+const { isSuperAdmin, isAdmin, isLoggedIn } = require('../../../middleware/handlers')
 
 const UserType = express.Router()
 
