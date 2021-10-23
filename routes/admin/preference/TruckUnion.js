@@ -1,7 +1,7 @@
 const express = require('express')
-const { VALIDATE_TRUCK_UNION } = require('../middleware/validators/TruckUnion')
-const TruckUnionController = require('../controllers/TruckUnion')
-const { isSuperAdmin, isAdmin, isLoggedIn } = require('../middleware/handlers')
+const { VALIDATE_TRUCK_UNION } = require('../../../middleware/validators/TruckUnion')
+const TruckUnionController = require('../../../controllers/admin/preferences/TruckUnion')
+const { isSuperAdmin, isAdmin, isLoggedIn } = require('../../../middleware/handlers')
 
 
 const TruckUnion = express.Router()

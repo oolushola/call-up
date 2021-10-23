@@ -1,6 +1,6 @@
-const UserTypeModel = require("../models/UserType");
+const UserTypeModel = require("../../../models/admin/preferences/UserType");
 const { validationResult } = require("express-validator");
-const { response } = require("../middleware/response");
+const { response } = require("../../../middleware/response");
 
 class UserTypeController {
   static async allUserTypes(_, res, _2) {

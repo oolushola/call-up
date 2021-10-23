@@ -1,7 +1,7 @@
 const express = require('express')
-const { VALIDATE_CATEGORY } = require('../middleware/validators/Category')
-const CategoryController = require('../controllers/Category')
-const { isSuperAdmin, isAdmin, isLoggedIn } = require('../middleware/handlers')
+const { VALIDATE_CATEGORY } = require('../../../middleware/validators/Category')
+const CategoryController = require('../../../controllers/admin/preferences/Category')
+const { isSuperAdmin, isAdmin, isLoggedIn } = require('../../../middleware/handlers')
 
 
 const Category = express.Router()

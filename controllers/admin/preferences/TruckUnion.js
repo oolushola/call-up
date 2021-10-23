@@ -1,6 +1,6 @@
-const TruckUnionModel = require("../models/TruckUnion");
+const TruckUnionModel = require("../../../models/admin/preferences/TruckUnion");
 const { validationResult } = require("express-validator");
-const { response } = require("../middleware/response");
+const { response } = require("../../../middleware/response");
 
 class TruckUnionController {
   static async allTruckUnions(_, res, _2) {
