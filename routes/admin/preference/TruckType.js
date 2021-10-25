@@ -4,37 +4,37 @@ const truckTypeController = require('../../../controllers/admin/preferences/Truc
 const { isSuperAdmin, isAdmin, isLoggedIn } = require('../../../middleware/handlers')
 
 
-const TruckUnion = express.Router()
+const TruckType = express.Router()
 
-TruckUnion.get('/truck-types', 
+TruckType.get('/truck-types', 
   isLoggedIn,
   truckTypeController.allTruckTypes
 )
 
-TruckUnion.get('/truck-type/:truckTypeId',
+TruckType.get('/truck-type/:truckTypeId',
   isLoggedIn,
   truckTypeController.getTruckType
 )
 
-TruckUnion.post('/truck-type',
+TruckType.post('/truck-type',
   isLoggedIn,
   isAdmin,
   validator.CHECK_TRUCK_TYPE,
   truckTypeController.addTruckType
 )
 
-TruckUnion.put('/truck-type/:truckTypeId', 
+TruckType.put('/truck-type/:truckTypeId', 
   isLoggedIn,
   isAdmin,
   validator.CHECK_TRUCK_TYPE,
   truckTypeController.updateTruckType
 )
 
-TruckUnion.delete('/truck-type/:truckTypeId', 
+TruckType.delete('/truck-type/:truckTypeId', 
   isLoggedIn,
   isSuperAdmin,
   truckTypeController.removeTruckType
 )
 
 
-module.exports = TruckUnion
+module.exports = TruckType
