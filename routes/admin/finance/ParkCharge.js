@@ -1,5 +1,5 @@
 const express = require('express')
-const validator = require('../../../middleware/validators/park-charge')
+const validator = require('../../../middleware/validators/ParkCharge')
 const ParkChargeController = require('../../../controllers/admin/finance/ParkCharge')
 const { isSuperAdmin, isAdmin, isLoggedIn } = require('../../../middleware/handlers')
 
