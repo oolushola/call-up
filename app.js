@@ -9,6 +9,7 @@ const expressIp = require("express-ip");
 const app = express();
 const morgan = require("morgan");
 const helmet = require("helmet");
+const cors = require('cors')
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -17,6 +18,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "ssl")));
 app.use(morgan("dev"));
 app.use(helmet());
+app.use(cors())
 
 app.use(routes);
 
