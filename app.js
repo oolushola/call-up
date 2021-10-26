@@ -7,26 +7,29 @@ const path = require("path");
 const routes = require("./routes/route");
 const expressIp = require("express-ip");
 const app = express();
-const morgan = require('morgan')
-const helmet = require('helmet')
+const morgan = require("morgan");
+const helmet = require("helmet");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(expressIp().getIpInfoMiddleware);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "ssl")));
-app.use(morgan('dev'))
-app.use(helmet())
+app.use(morgan("dev"));
+app.use(helmet());
 
 app.use(routes);
 
 app.use((_, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
     "Access-Control-Allow-Methods",
     "GET, POST, PATCH, PUT, DELETE, OPTIONS"
   );
-  res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With,  Authorization, Content-Type"
+  );
   next();
 });
 
