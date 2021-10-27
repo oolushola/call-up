@@ -10,7 +10,12 @@ const UserTypeSchema = new Schema({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category'
-  }
+  },
+  hasWallet: {
+    required: true,
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true
 })

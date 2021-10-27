@@ -9,6 +9,8 @@ const tkn = require("../middleware/handlers");
 const crypto = require("crypto");
 const { PASSWORD_RESET } = require("../middleware/password-reset-link");
 const os = require("os");
+const WalletModel = require('../models/Wallet')
+const UserTypeModel = require('../models/admin/preferences/UserType')
 
 class AuthController {
   static async signUp(req, res, next) {
@@ -18,6 +20,7 @@ class AuthController {
         return response(res, 422, errors.mapped(), "validation failed");
       }
       const { name, email, password, phoneNo, userType } = req.body;
+      const getUserType = await UserTypeModel.findOne({ userType: userType })
       const hashedPassword = await bcrypt.hash(password, 10);
       const userInstance = new UserModel({
         name,
@@ -26,8 +29,29 @@ class AuthController {
         phoneNo,
         userType,
       });
-
       const user = await userInstance.save();
+      let createdWallet;
+      if(getUserType.hasWallet) {
+        const amount = 0;
+        const createWallet = new WalletModel({
+          availableBalance: amount,
+          lastDeposit: amount,
+          userId: user._id,
+          transactionHistory: [
+            {
+              charges: 0,
+              amount: amount,
+              commission: 0,
+              amountPaid: 0,
+              transactionType: "credit",
+              timestamp: Date.now(),
+              modeOfPayment: "account opening",
+              ledgerBalance: amount,
+            },
+          ],
+        });
+        createdWallet = await createWallet.save();
+      }
       const token = tkn.GENERATE_TOKEN({ id: user._id }, "24h");
       MAILER(
         email,
@@ -41,6 +65,7 @@ class AuthController {
           name,
           email,
           token,
+          wallet: createdWallet
         },
         "successful"
       );
