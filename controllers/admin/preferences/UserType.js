@@ -41,7 +41,7 @@ class UserTypeController {
       if (!errors.isEmpty()) {
         return response(res, 422, errors.mapped(), "validation failed");
       }
-      const { userType, category } = req.body;
+      const { userType, category, hasWallet } = req.body;
       const checkUserType = await UserTypeModel.findOne({
         userType: userType,
       }).countDocuments();
@@ -51,6 +51,7 @@ class UserTypeController {
       const userTypeInfo = new UserTypeModel({
         userType,
         category,
+        hasWallet
       });
       const saveUserType = await userTypeInfo.save();
       response(res, 201, saveUserType, "user type added");
@@ -67,7 +68,7 @@ class UserTypeController {
           res, 422, errors.mapped(), 'validation failed'
         )
       }
-      const { userType, category } = req.body
+      const { userType, category, hasWallet } = req.body
       const { userTypeId } = req.params
       const checkRecord = await UserTypeModel
         .findOne({ _id: { $ne: userTypeId }})
@@ -80,7 +81,8 @@ class UserTypeController {
       const updatedRecord = await UserTypeModel.findByIdAndUpdate({ 
         _id: userTypeId }, {
         userType,
-        category
+        category,
+        hasWallet
       })
       response(
         res, 201, updatedRecord, `${updatedRecord.userType} updated successfully`

@@ -7,6 +7,9 @@ exports.VALIDATE_USER_TYPE = [
     .trim(),
   body('category')
     .isMongoId()
+    .notEmpty(),
+  body('hasWallet')
+    .isBoolean()
     .notEmpty()
 ];
 
