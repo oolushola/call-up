@@ -6,7 +6,6 @@ const { isSuperAdmin, isAdmin, isLoggedIn } = require('../../../middleware/handl
 const UserType = express.Router()
 
 UserType.get('/user-types', 
-  isLoggedIn,
   UserTypeController.allUserTypes
 )
 
