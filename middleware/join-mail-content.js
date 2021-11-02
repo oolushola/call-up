@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.WELCOME_EMAIL = (id, name, token) => {
-  const verificationURL = `${process.env.URL}${process.env.BASE_URL}/auth/is/click?token=${token}`;
+  const verificationURL = `http://localhost:8080/verify-email/auth/is/click?token=${token}`;
 
   return `
     <!DOCTYPE html>
