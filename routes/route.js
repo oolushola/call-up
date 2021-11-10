@@ -10,6 +10,7 @@ const TruckType = require('./admin/preference/TruckType')
 const TruckLength = require('./admin/preference/TruckLength')
 const Wallet = require('./Wallet')
 const Truck = require('./Truck')
+const ParkFeature = require('./admin/preference/ParkFeatures')
 
 routes.use(process.env.BASE_URL, [
   AuthRoute,
@@ -21,7 +22,8 @@ routes.use(process.env.BASE_URL, [
   TruckType,
   TruckLength,
   Wallet,
-  Truck
+  Truck,
+  ParkFeature
 ])
 
 module.exports = routes
