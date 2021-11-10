@@ -71,7 +71,10 @@ exports.isLoggedIn = async(req, res, next) => {
 exports.walletPrivilege = async (req, res, next) => {
   try {
     const checkUserType = await UserModel.findById(req.userId);
-    if(checkUserType.userType !== "transporter" && checkUserType.userType !== "park operators") {
+    if(checkUserType.userType !== "transporter" && 
+      checkUserType.userType !== "park operators" && 
+      checkUserType.userType !== "admin"
+    ) {
       return response(
         res, 403, null, 'permission denied'
       )
