@@ -26,6 +26,10 @@ const WalletSchema = new Schema({
     charges:{
       type: Number
     },
+    transactionStatus: {
+      type: String,
+      default: 'pending'
+    },
     amount: {
       type: Number
     },

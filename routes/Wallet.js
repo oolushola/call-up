@@ -5,12 +5,27 @@ const validator = require('../middleware/validators/Wallet')
 
 const Wallet = express.Router()
 
+Wallet.get(
+  '/user/wallet',
+  middleware.isLoggedIn,
+  middleware.walletPrivilege,
+  WalletController.wallet
+)
+
 Wallet.post(
   '/fund-wallet',
   middleware.isLoggedIn,
   middleware.walletPrivilege,
   validator.CHECK_FUND,
   WalletController.fundWallet
+)
+
+Wallet.patch(
+  '/update-transaction-history',
+  middleware.isLoggedIn,
+  middleware.walletPrivilege,
+  validator.CHECK_DEBIT,
+  WalletController.debitAccount
 )
 
 Wallet.post(
