@@ -20,19 +20,20 @@ const TruckSchema = new Schema({
       required: true,
       type: String
     },
-    chasisNumber: {
+    chasisNo: {
       required: true,
       type: String
     },
     truckType: {
       required: true,
-      type: String
+      type: String,
+      ref: 'TruckType'
     },
     union: {
       type: Schema.Types.ObjectId,
       ref: 'TruckUnion'
     },
-    truckLength: {  
+    length: {  
       required: true,
       type: Schema.Types.ObjectId,
       ref: 'TruckLength'
@@ -53,11 +54,36 @@ const TruckSchema = new Schema({
       default: false
     },
     truckStatus: {
-      type: String
+      type: String // tells the truck status 
+    },
+    paymentStatus: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    stage: {
+      type: String,
+      required: true,
+      default: 'pending verification'
+    },
+    verificationStatus: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    dateVerified: {
+      type: Date
+    },
+    activationStatus: {
+      type: Boolean,
+      default: true // depends if the owner wants to make active or inactive.
     }
   }]
 }, {
   timestamps: true
 })
 
-mongoose.model('Trucks', TruckSchema)
+const TruckModel = mongoose.model('Trucks', TruckSchema)
+
+module.exports = TruckModel
+

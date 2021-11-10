@@ -4,6 +4,26 @@ const { response } = require("../middleware/response");
 require("dotenv").config();
 
 class WalletController {
+  static async wallet(req, res, next) {
+    try {
+      const walletRequest = await WalletModel.findOne({ userId: req.userId })
+      .select('_id availableBalance lastDeposit lastAmountSpent userId ')
+      if(!walletRequest) {
+        return response(
+          res, 404, null, 'wallet not found'
+        )
+      }
+      response(
+        res, 200, walletRequest, 'wallet detail'
+      )
+    }
+    catch(err) {
+      response(
+        res, 500, err.message, 'internal server error'
+      )
+    }
+  }
+
   static async fundWallet(req, res, next) {
     try {
       const errors = validationResult(req);
@@ -110,6 +130,60 @@ class WalletController {
       response(res, 404, {}, "invalid wallet id");
     } catch (err) {
       response(res, 500, err.message, "internal server error");
+    }
+  }
+
+  static async debitAccount(req, res, next) {
+    try {
+      const errors = validationResult(req);
+      if(!errors.isEmpty()) {
+        return response(
+          res, 422, errors.mapped(), 'validation failed'
+        )
+      }
+      const amount = req.body.amount
+      const modeOfPayment = req.body.modeOfPayment
+      const transactionRef = req.query.tx_ref
+      const getUserWallet = await WalletModel.findOne({ _userId: req.userId })
+      const transactionStatus = req.query.status
+
+      if(!getUserWallet) {
+        return response(
+          res, 404, 'lost', 'wallet not found'
+        )
+      }
+      let ledgerBalance = getUserWallet.availableBalance
+      if(modeOfPayment === "wallet") {
+        ledgerBalance -= amount;
+      }
+      const checkTransactionReference = getUserWallet.transactionHistory.find(refNo => refNo.transactionReference === transactionRef);
+      if(checkTransactionReference) {
+        return response(
+          res, 409, checkTransactionReference, 'duplicate transaction'
+        )
+      }
+      getUserWallet.transactionHistory.push({
+        charges: 0,
+        amount: amount,
+        commission: 0,
+        amountPaid: amount,
+        transactionType: "debit",
+        timestamp: Date.now(),
+        modeOfPayment: modeOfPayment,
+        transactionReference: transactionRef,
+        ledgerBalance: ledgerBalance,
+        transactionStatus: transactionStatus
+      })
+      getUserWallet.availableBalance = ledgerBalance
+      const updateTransactionHistory = await getUserWallet.save();
+      response(
+        res, 201, updateTransactionHistory, 'wallet has been deited'
+      )
+    }
+    catch(err) {
+      response(
+        res, 500, err.message, 'internal server error'
+      )
     }
   }
 

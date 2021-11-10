@@ -6,3 +6,14 @@ exports.CHECK_FUND = [
     .notEmpty()
     .trim()
 ]
+
+exports.CHECK_DEBIT = [
+  body('amount')
+    .isFloat()
+    .notEmpty()
+    .trim(),
+  body('modeOfPayment')
+    .isString()
+    .notEmpty()
+    .trim()
+]
