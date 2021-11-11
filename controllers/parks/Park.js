@@ -40,8 +40,6 @@ class ParkController {
     }
   }
 
-  static async viewPark(req, res, next) {}
-
   static async addParks(req, res, next) {
     try {
       const errors = validationResult(req);
