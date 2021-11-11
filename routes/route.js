@@ -1,19 +1,23 @@
-const express = require('express')
-const routes = express.Router()
-const AuthRoute = require('./Auth')
-const TruckUnionRoute = require('./admin/preference/TruckUnion')
-const UserTypeRoute = require('./admin/preference/UserType')
-const Category = require('./admin/preference/Category')
-const TruckCharge = require('./admin/finance/TruckCharge')
-const ParkCharge = require('./admin/finance/ParkCharge')
-const TruckType = require('./admin/preference/TruckType')
-const TruckLength = require('./admin/preference/TruckLength')
-const Wallet = require('./Wallet')
-const Truck = require('./Truck')
-const ParkFeature = require('./admin/preference/ParkFeatures')
-const Park = require('./Park')
-const BookingCategory = require('./admin/preference/BookingCategory')
-const Terminal = require('./Terminal')
+const express = require("express");
+const routes = express.Router();
+const AuthRoute = require("./Auth");
+
+const TruckUnionRoute = require("./admin/preference/TruckUnion");
+const UserTypeRoute = require("./admin/preference/UserType");
+const Category = require("./admin/preference/Category");
+const BookingCategory = require("./admin/preference/BookingCategory");
+const ParkFeature = require("./admin/preference/ParkFeatures");
+const TruckType = require("./admin/preference/TruckType");
+const TruckLength = require("./admin/preference/TruckLength");
+
+const AddOnService = require("./admin/finance/AddOnService");
+const TruckCharge = require("./admin/finance/TruckCharge");
+const ParkCharge = require("./admin/finance/ParkCharge");
+
+const Wallet = require("./Wallet");
+const Truck = require("./Truck");
+const Park = require("./Park");
+const Terminal = require("./Terminal");
 
 routes.use(process.env.BASE_URL, [
   AuthRoute,
@@ -29,7 +33,8 @@ routes.use(process.env.BASE_URL, [
   ParkFeature,
   Park,
   BookingCategory,
-  Terminal
-])
+  Terminal,
+  AddOnService,
+]);
 
-module.exports = routes
+module.exports = routes;
