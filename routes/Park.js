@@ -1,6 +1,5 @@
 const express = require('express')
-const ParkModel = require("../models/Parks/park");
-const ParkController = require("../controllers/parks/Park");
+const { ParkController, upload } = require("../controllers/parks/Park");
 const validator = require("../middleware/validators/Park");
 const { isLoggedIn, isAdmin, isSuperAdmin, walletPrivilege } = require("../middleware/handlers");
 
@@ -16,6 +15,7 @@ ParkRoute.post(
   '/new/park',
   isLoggedIn,
   walletPrivilege,
+  upload,
   validator.CHECK_ADD_PARK,
   ParkController.addParks
 )
