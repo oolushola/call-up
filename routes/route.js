@@ -13,6 +13,7 @@ const Truck = require('./Truck')
 const ParkFeature = require('./admin/preference/ParkFeatures')
 const Park = require('./Park')
 const BookingCategory = require('./admin/preference/BookingCategory')
+const Terminal = require('./Terminal')
 
 routes.use(process.env.BASE_URL, [
   AuthRoute,
@@ -27,7 +28,8 @@ routes.use(process.env.BASE_URL, [
   Truck,
   ParkFeature,
   Park,
-  BookingCategory
+  BookingCategory,
+  Terminal
 ])
 
 module.exports = routes

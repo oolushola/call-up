@@ -10,6 +10,9 @@ const ParkSchema = new Schema({
     phoneNos: { required: true, type: Array },
     address: { required: true, type: String },
   },
+  parkImage: {
+    type: String
+  },
   profileType: { required: true, type: Schema.Types.ObjectId, ref: 'Category' },
   parkStatus: { required: true, type: Boolean },
   availableSlot: { type: Number },
@@ -20,7 +23,13 @@ const ParkSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'ParkFeature'
     }
-  }]
+  }],
+  parkType: {
+    required: true,
+    type: Array
+  }
+}, {
+  timestamps: true
 })
 
 module.exports = mongoose.model('Park', ParkSchema)

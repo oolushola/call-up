@@ -1,7 +1,23 @@
 const ParkModel = require("../../models/Parks/park");
 const { validationResult } = require("express-validator");
 const { response } = require("../../middleware/response");
+const multer = require('multer');
 const crypto = require("crypto");
+const cloudinary = require('cloudinary').v2
+
+const filefilter = (req, file, cb) => {
+  if(file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg" 
+  ) {
+    cb(null, true)
+  }
+  else{
+    cb(false, null)
+  }
+}
+
+const upload = multer({ dest: 'uploads/', fileFilter: filefilter }).single('parkImage')
 
 class ParkController {
   static async allParks(req, res, next) {
@@ -49,6 +65,12 @@ class ParkController {
       const referenceNo = crypto.randomBytes(10).toString("hex");
       const entryGateSerialNo = generateSerial();
       const exitGateSerialNo = generateSerial();
+      let parkImage;
+      if(req.file) {
+        parkImage = await cloudinary.uploader.upload(req.file.path, {
+          folder: 'parks'
+        })
+      }
       const {
         name,
         capacity,
@@ -57,6 +79,7 @@ class ParkController {
         features,
         availableSlot,
         contact,
+        parkType,
       } = req.body;
       const parkInstance = new ParkModel({
         owner: req.userId,
@@ -67,11 +90,12 @@ class ParkController {
         parkStatus: parkStatus,
         avaiilableSlot: availableSlot,
         contact: contact,
+        parkImage: parkImage.secure_url,
+        parkType: parkType,
         entryGateSerialNo: entryGateSerialNo,
         exitGateSerialNo: exitGateSerialNo,
         features: features,
       });
-      console.log(parkInstance);
       const saveParkInstance = await parkInstance.save();
       response(res, 201, saveParkInstance, "park added");
     } catch (err) {
@@ -93,4 +117,7 @@ const generateSerial = () => {
   return randomSerial;
 };
 
-module.exports = ParkController;
+module.exports = {
+  upload,
+  ParkController
+};
