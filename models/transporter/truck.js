@@ -77,6 +77,10 @@ const TruckSchema = new Schema({
     activationStatus: {
       type: Boolean,
       default: true // depends if the owner wants to make active or inactive.
+    },
+    availableForCallUp: {
+      type: Boolean,
+      default: true
     }
   }]
 }, {

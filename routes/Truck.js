@@ -7,6 +7,12 @@ const validator = require('../middleware/validators/Trucks')
 const Truck = express.Router()
 
 Truck.get(
+  '/available-for-callup',
+  isLoggedIn,
+  TruckController.availableForCallUp
+)
+
+Truck.get(
   '/verified-trucks',
   isLoggedIn,
   TruckController.getVerifiedTrucks

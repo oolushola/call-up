@@ -3,6 +3,19 @@ const { response } = require("../../middleware/response");
 const { validationResult } = require("express-validator");
 
 class TerminalController {
+  static async getUserTerminal(req, res, next) {
+    try {
+      const terminal = await TerminalModel.find({ ownedBy: req.userId })
+        .select("-__v -createdAt -updatedAt");
+      if (!terminal) {
+        return response(res, 404, null, "resource not found");
+      }
+      response(res, 200, terminal, "terminal info");
+    } catch (err) {
+      response(res, 500, err.message, "internal server error");
+    }
+  }
+
   static async getTerminals(req, res, next) {
     try {
       const getTerminals = await TerminalModel.find()

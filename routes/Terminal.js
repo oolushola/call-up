@@ -6,6 +6,13 @@ const validator = require("../middleware/validators/Terminal");
 
 TerminalRoute.get("/terminals", isLoggedIn, TerminalController.getTerminals);
 
+
+TerminalRoute.get(
+  "/user-terminal",
+  isLoggedIn,
+  TerminalController.getUserTerminal
+);
+
 TerminalRoute.post(
   "/terminal/add",
   isLoggedIn,
