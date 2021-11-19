@@ -26,6 +26,34 @@ cloudinary.config({
 });
 
 class TruckController {
+  static async availableForCallUp(req, res, next) {
+    try {
+      const owner = await TruckModel.findOne({ ownedBy: req.userId })
+      let availableForCallUp = []
+      if(owner.trucks.length > 0) {
+        const getTrucks = owner.trucks.map(truckInstance => {
+          if(
+            truckInstance.availableForCallUp && 
+            truckInstance.activationStatus && 
+            truckInstance.verificationStatus) {
+            availableForCallUp.push({
+              _id: truckInstance._id,
+              plateNo: truckInstance.plateNo
+            })
+          }
+        })
+      }
+      response(
+        res, 200, availableForCallUp, 'trucks available for call up'
+      )
+    }
+    catch(err) {
+      response(
+        res, 500, err.message, 'internal server error', 
+      )
+    }
+  }
+
   static async getVerifiedTrucks(req, res, next) {
     try {
       let verifiedTrucks = [];

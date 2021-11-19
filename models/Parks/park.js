@@ -14,7 +14,7 @@ const ParkSchema = new Schema({
     type: String
   },
   profileType: { required: true, type: Schema.Types.ObjectId, ref: 'Category' },
-  parkStatus: { required: true, type: Boolean },
+  parkStatus: { required: true, type: Boolean, default: true },
   availableSlot: { type: Number },
   entryGateSerialNo: { required: true, type: String },
   exitGateSerialNo: { required: true, type: String },
@@ -24,6 +24,11 @@ const ParkSchema = new Schema({
       ref: 'ParkFeature'
     }
   }],
+  allowedTerminals: {
+    required: true,
+    type: Array,
+    ref: 'Terminal'
+  },
   parkType: {
     required: true,
     type: Array

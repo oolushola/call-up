@@ -1,4 +1,5 @@
 const ParkModel = require("../../models/Parks/park");
+const TerminalModel = require('../../models/terminals/Terminal')
 const { validationResult } = require("express-validator");
 const { response } = require("../../middleware/response");
 const multer = require('multer');
@@ -77,10 +78,23 @@ class ParkController {
         type,
         parkStatus,
         features,
-        availableSlot,
-        contact,
+        phoneNos,
+        location,
         parkType,
+        allowedTerminals
       } = req.body;
+
+      const contact = {
+        phoneNos: JSON.parse(phoneNos),
+        address: location
+      }
+
+      let userAllowedTerminals = JSON.parse(allowedTerminals)
+      let terminals = []
+      userAllowedTerminals.map(terminal => {
+        terminals.push(terminal.id)
+      })
+
       const parkInstance = new ParkModel({
         owner: req.userId,
         referenceNo: referenceNo,
@@ -88,15 +102,23 @@ class ParkController {
         capacity: capacity,
         profileType: type,
         parkStatus: parkStatus,
-        avaiilableSlot: availableSlot,
+        availableSlot: capacity,
         contact: contact,
         parkImage: parkImage.secure_url,
         parkType: parkType,
         entryGateSerialNo: entryGateSerialNo,
         exitGateSerialNo: exitGateSerialNo,
-        features: features,
+        features: JSON.parse(features),
+        allowedTerminals: terminals
       });
       const saveParkInstance = await parkInstance.save();
+
+      await terminals.map(async(terminalId) => {
+        const terminal = await TerminalModel.findOne({ _id: terminalId })
+        terminal.parks.push(parkInstance._id)
+        await terminal.save()
+      })
+
       response(res, 201, saveParkInstance, "park added");
     } catch (err) {
       response(res, 500, err.message, "internal server error");

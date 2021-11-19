@@ -22,17 +22,17 @@ exports.CHECK_ADD_PARK = [
   body('type')
     .isMongoId()
     .notEmpty(),
-  body('contact.phoneNos')
-    .isArray()
-    .isLength({ min: 1 })
-    .notEmpty(),
-  body('contact.address')
-    .isString()
-    .notEmpty()
-    .trim(),
-  body('parkStatus')
-    .isBoolean()
-    .notEmpty(),
+  // body('contact.phoneNos')
+  //   .isArray()
+  //   .isLength({ min: 1 })
+  //   .notEmpty(),
+  // body('contact.address')
+  //   .isString()
+  //   .notEmpty()
+  //   .trim(),
+  // body('parkStatus')
+  //   .isBoolean()
+  //   .notEmpty(),
 ]
 
 exports.CHECK_PARK_UPDATE = [

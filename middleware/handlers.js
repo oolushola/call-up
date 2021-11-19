@@ -68,6 +68,26 @@ exports.isLoggedIn = async(req, res, next) => {
   }
 }
 
+
+exports.isTerminal = async (req, res, next) => {
+  try {
+    const checkUserType = await UserModel.findById(req.userId);
+    if(checkUserType.userType !== "terminal" &&
+      checkUserType.userType !== "admin"
+    ) {
+      return response(
+        res, 403, null, 'permission denied'
+      )
+    }
+    next()
+  }
+  catch(err) {
+    response(
+      res, 500, err.message, 'internal server errors'
+    )
+  }
+}
+
 exports.walletPrivilege = async (req, res, next) => {
   try {
     const checkUserType = await UserModel.findById(req.userId);

@@ -18,6 +18,7 @@ const Wallet = require("./Wallet");
 const Truck = require("./Truck");
 const Park = require("./Park");
 const Terminal = require("./Terminal");
+const uploadTdoRoute = require('./UploadTdo')
 
 routes.use(process.env.BASE_URL, [
   AuthRoute,
@@ -35,6 +36,7 @@ routes.use(process.env.BASE_URL, [
   BookingCategory,
   Terminal,
   AddOnService,
+  uploadTdoRoute
 ]);
 
 module.exports = routes;

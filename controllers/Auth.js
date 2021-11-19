@@ -197,6 +197,27 @@ class AuthController {
       response(res, 500, err.message, "internal server error");
     }
   }
+
+  static async getUserCategory(req, res, next) {
+    try {
+      const userType = req.query.userType;
+      if(!userType) {
+        return response(
+          res, 400, null, 'user type not defined'
+        )
+      }
+      const getUserRequest = await UserModel.find({ userType: userType, isEmailVerified: true }).select('name')
+      response(
+        res, 200, getUserRequest, 'user category list'
+      )
+    }
+    catch(err) {
+      response(
+        res, 500, err.message, 'internal server error'
+      )
+    }
+  }
+
 }
 
 module.exports = AuthController;
