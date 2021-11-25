@@ -103,7 +103,6 @@ class AuthController {
     }
     try {
       const { email, password } = req.body;
-      console.log(password);
       const user = await UserModel.findOne({ email: email });
       const doMatch = await bcrypt.compare(password, user.password);
       if (!doMatch) {
