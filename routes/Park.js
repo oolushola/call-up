@@ -6,6 +6,12 @@ const { isLoggedIn, isAdmin, isSuperAdmin, walletPrivilege } = require("../middl
 const ParkRoute = express.Router()
 
 ParkRoute.get(
+  '/park/holding-bays',
+  isLoggedIn,
+  ParkController.getHoldingBayParks
+)
+
+ParkRoute.get(
   '/parks/all',
   isLoggedIn,
   ParkController.allParks

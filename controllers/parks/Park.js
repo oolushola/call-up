@@ -1,26 +1,43 @@
 const ParkModel = require("../../models/Parks/park");
-const TerminalModel = require('../../models/terminals/Terminal')
+const TerminalModel = require("../../models/terminals/Terminal");
 const { validationResult } = require("express-validator");
 const { response } = require("../../middleware/response");
-const multer = require('multer');
+const multer = require("multer");
 const crypto = require("crypto");
-const cloudinary = require('cloudinary').v2
+const cloudinary = require("cloudinary").v2;
 
 const filefilter = (req, file, cb) => {
-  if(file.mimetype === "image/png" ||
+  if (
+    file.mimetype === "image/png" ||
     file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg" 
+    file.mimetype === "image/jpeg"
   ) {
-    cb(null, true)
+    cb(null, true);
+  } else {
+    cb(false, null);
   }
-  else{
-    cb(false, null)
-  }
-}
+};
 
-const upload = multer({ dest: 'uploads/', fileFilter: filefilter }).single('parkImage')
+const upload = multer({ dest: "uploads/", fileFilter: filefilter }).single(
+  "parkImage"
+);
 
 class ParkController {
+  static async getHoldingBayParks(req, res, next) {
+    try {
+      const parks = await ParkModel.find({
+        parkType: "Holding Bay",
+        parkStatus: true,
+      }).select(
+        "-createdAt, -updatedAt -entryGateSerialNo -exitGateSerialNo -parkType -allowedTerminals"
+      ).populate('features.featureId profileType', 'feature category')
+      ;
+      return response(res, 200, parks, "holding bays");
+    } catch (err) {
+      response(res, 500, err.message, "internal server error");
+    }
+  }
+
   static async allParks(req, res, next) {
     try {
       const limit = req.query.limit || process.env.PER_PAGE;
@@ -31,9 +48,7 @@ class ParkController {
         .sort({ name: "asc" })
         .skip(skip)
         .limit(limit);
-      response(
-        res, 200, allParks, 'all parks'
-      )
+      response(res, 200, allParks, "all parks");
     } catch (err) {
       response(res, 500, err.message, "internal server error");
     }
@@ -49,9 +64,7 @@ class ParkController {
         .sort({ name: "asc" })
         .skip(skip)
         .limit(limit);
-      response(
-        res, 200, userParks, 'user parks'
-      )
+      response(res, 200, userParks, "user parks");
     } catch (err) {
       response(res, 500, err.message, "internal server error");
     }
@@ -67,10 +80,10 @@ class ParkController {
       const entryGateSerialNo = generateSerial();
       const exitGateSerialNo = generateSerial();
       let parkImage;
-      if(req.file) {
+      if (req.file) {
         parkImage = await cloudinary.uploader.upload(req.file.path, {
-          folder: 'parks'
-        })
+          folder: "parks",
+        });
       }
       const {
         name,
@@ -81,19 +94,21 @@ class ParkController {
         phoneNos,
         location,
         parkType,
-        allowedTerminals
+        allowedTerminals,
       } = req.body;
 
       const contact = {
         phoneNos: JSON.parse(phoneNos),
-        address: location
-      }
+        address: location,
+      };
 
-      let userAllowedTerminals = JSON.parse(allowedTerminals)
-      let terminals = []
-      userAllowedTerminals.map(terminal => {
-        terminals.push(terminal.id)
-      })
+      const parkTypes = JSON.parse(parkType);
+
+      let userAllowedTerminals = JSON.parse(allowedTerminals);
+      let terminals = [];
+      userAllowedTerminals.map((terminal) => {
+        terminals.push(terminal.id);
+      });
 
       const parkInstance = new ParkModel({
         owner: req.userId,
@@ -105,19 +120,19 @@ class ParkController {
         availableSlot: capacity,
         contact: contact,
         parkImage: parkImage.secure_url,
-        parkType: parkType,
+        parkType: parkTypes,
         entryGateSerialNo: entryGateSerialNo,
         exitGateSerialNo: exitGateSerialNo,
         features: JSON.parse(features),
-        allowedTerminals: terminals
+        allowedTerminals: terminals,
       });
       const saveParkInstance = await parkInstance.save();
 
-      await terminals.map(async(terminalId) => {
-        const terminal = await TerminalModel.findOne({ _id: terminalId })
-        terminal.parks.push(parkInstance._id)
-        await terminal.save()
-      })
+      await terminals.map(async (terminalId) => {
+        const terminal = await TerminalModel.findOne({ _id: terminalId });
+        terminal.parks.push(parkInstance._id);
+        await terminal.save();
+      });
 
       response(res, 201, saveParkInstance, "park added");
     } catch (err) {
@@ -141,5 +156,5 @@ const generateSerial = () => {
 
 module.exports = {
   upload,
-  ParkController
+  ParkController,
 };

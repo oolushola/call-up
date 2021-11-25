@@ -32,7 +32,11 @@ const ParkSchema = new Schema({
   parkType: {
     required: true,
     type: Array
-  }
+  },
+  lock: {
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true
 })
