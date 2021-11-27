@@ -43,7 +43,8 @@ const WalletSchema = new Schema({
       type: String
     },
     timestamp: {
-      type: Date
+      type: Date,
+      default: new Date()
     },
     modeOfPayment: {
       type: String
@@ -53,6 +54,9 @@ const WalletSchema = new Schema({
     },
     transactionReference: {
       type: String,
+    },
+    paymentFor: {
+      type: String
     }
   }]
 }, {
