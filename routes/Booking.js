@@ -22,4 +22,22 @@ BookingRoute.post(
   BookingController.createBooking
 )
 
+BookingRoute.delete(
+  '/holding-bay/add-on/:bookingId',
+  isLoggedIn,
+  BookingController.removeHoldingBayAddOn
+)
+
+BookingRoute.delete(
+  '/holding-bay/stops/:bookingId',
+  isLoggedIn,
+  BookingController.removeHoldingBayStop
+)
+
+BookingRoute.patch(
+  '/wallet-transaction-update',
+  isLoggedIn,
+  BookingController.holdingBayPayment
+)
+
 module.exports = BookingRoute

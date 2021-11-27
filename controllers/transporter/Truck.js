@@ -201,7 +201,7 @@ class TruckController {
 const generateQrCode = async (truckNo) => {
   try {
     const answer = await QRCode.toDataURL(
-      `${process.env.URL}${process.env.BASE_URL}/lookup?truckref=${truckNo}`,
+      `${process.env.FRONT_END_URL}/lookup?plateNo=${truckNo}`,
       { type: "image/png" }
     );
     return answer;
