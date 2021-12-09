@@ -34,18 +34,52 @@ class TerminalController {
       if (!errors.isEmpty()) {
         return response(res, 422, errors.mapped(), "validation failed");
       }
-      const { name, contact, parks, email } = req.body;
+      const checkAssociatedTerminal = await TerminalModel.findOne({ ownedBy: req.userId })
+      if (checkAssociatedTerminal) {
+        return response(
+          res, 400, null, 'operation aborted'
+        )
+      }
+      const { name, contact, email, portId } = req.body;
       const newTerminalInstance = new TerminalModel({
+        portId: portId,
         ownedBy: req.userId,
         name: name,
         email: email,
         contact: contact,
-        parks: parks,
       });
       const saveTerminalInstance = await newTerminalInstance.save()
       response(res, 200, saveTerminalInstance, "terminal added");
     } catch (err) {
       response(res, 500, err.message, "internal server error");
+    }
+  }
+
+  static async updateTerminal(req, res, next) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return response(res, 422, errors.mapped(), "validation failed");
+      }
+      const terminalId = req.params.terminalId
+      const { name, contact, email, portId } = req.body;
+      const terminalInfo = await TerminalModel.findById(terminalId)
+      if (!terminalInfo) {
+        return response(
+          res, 404, null, 'record not found'
+        )
+      }
+      terminalInfo.portId = portId
+      terminalInfo.name = name
+      terminalInfo.email = email
+      terminalInfo.contact = contact
+      const updatedTerminalInfo = await terminalInfo.save()
+      response(res, 200, updatedTerminalInfo, "terminal info updated successfully");
+    }
+    catch (err) {
+      response(
+        res, 500, err.message, 'internal server error'
+      )
     }
   }
 

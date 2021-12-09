@@ -16,10 +16,16 @@ TerminalRoute.get(
 TerminalRoute.post(
   "/terminal/add",
   isLoggedIn,
-  isAdmin,
   validator.ADD_TERMINAL,
   TerminalController.addTerminal
 );
+
+TerminalRoute.put(
+  '/terminal/:terminalId',
+  isLoggedIn,
+  validator.UPDATE_TERMINAL,
+  TerminalController.updateTerminal
+)
 
 TerminalRoute.get(
   "/terminal/:terminalId",
