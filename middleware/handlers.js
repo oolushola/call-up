@@ -4,12 +4,12 @@ require('dotenv').config()
 const UserModel = require('../models/User')
 
 exports.GENERATE_TOKEN = (credential, duration) => {
-  return jwt.sign(credential, process.env.SECRET_TOKEN, { expiresIn: `${duration}`})
+  return jwt.sign(credential, process.env.SECRET_TOKEN, { expiresIn: `${duration}` })
 }
 
 exports.VERIFY_TOKEN = async (req, res, next, token) => {
   const checkedToken = token
-  if(!checkedToken) {
+  if (!checkedToken) {
     return response(
       res, 401, {}, 'unauthorized'
     )
@@ -19,9 +19,9 @@ exports.VERIFY_TOKEN = async (req, res, next, token) => {
     const checker = await jwt.verify(token_, process.env.SECRET_TOKEN)
     req.userId = checker.id
     next()
-    return checker  
+    return checker
   }
-  catch(err) {
+  catch (err) {
     response(
       res, 500, err.message, 'oops, something went wrong'
     )
@@ -30,7 +30,7 @@ exports.VERIFY_TOKEN = async (req, res, next, token) => {
 
 exports.isSuperAdmin = async (req, res, next) => {
   const user = await UserModel.findById(req.userId)
-  if(user.userType !== "admin" && user.userAccess !== 1) {
+  if (user.userType !== "admin" && user.userAccess !== 1) {
     return response(
       res, 403, null, 'access denied'
     )
@@ -40,7 +40,7 @@ exports.isSuperAdmin = async (req, res, next) => {
 
 exports.isAdmin = async (req, res, next) => {
   const user = await UserModel.findById(req.userId)
-  if(user.userType !== "admin") {
+  if (user.userType !== "admin") {
     return response(
       res, 403, null, 'access denied'
     )
@@ -48,10 +48,10 @@ exports.isAdmin = async (req, res, next) => {
   next()
 }
 
-exports.isLoggedIn = async(req, res, next) => {
-  try{
+exports.isLoggedIn = async (req, res, next) => {
+  try {
     const token = req.headers['authorization']
-    if(!token) {
+    if (!token) {
       return response(
         res, 401, null, 'unauthorized: missing token in request header'
       )
@@ -61,7 +61,7 @@ exports.isLoggedIn = async(req, res, next) => {
     req.userId = tokenStatus.id
     next()
   }
-  catch(err) {
+  catch (err) {
     response(
       res, 500, err.message, 'internal server error'
     )
@@ -72,7 +72,7 @@ exports.isLoggedIn = async(req, res, next) => {
 exports.isTerminal = async (req, res, next) => {
   try {
     const checkUserType = await UserModel.findById(req.userId);
-    if(checkUserType.userType !== "terminal" &&
+    if (checkUserType.userType !== "terminal" &&
       checkUserType.userType !== "admin"
     ) {
       return response(
@@ -81,7 +81,7 @@ exports.isTerminal = async (req, res, next) => {
     }
     next()
   }
-  catch(err) {
+  catch (err) {
     response(
       res, 500, err.message, 'internal server errors'
     )
@@ -91,9 +91,10 @@ exports.isTerminal = async (req, res, next) => {
 exports.walletPrivilege = async (req, res, next) => {
   try {
     const checkUserType = await UserModel.findById(req.userId);
-    if(checkUserType.userType !== "transporter" && 
-      checkUserType.userType !== "park operators" && 
-      checkUserType.userType !== "admin"
+    if (checkUserType.userType !== "transporter" &&
+      checkUserType.userType !== "park owner" &&
+      checkUserType.userType !== "admin" &&
+      checkUserType.userType !== "union"
     ) {
       return response(
         res, 403, null, 'permission denied'
@@ -101,7 +102,7 @@ exports.walletPrivilege = async (req, res, next) => {
     }
     next()
   }
-  catch(err) {
+  catch (err) {
     response(
       res, 500, err.message, 'internal server errors'
     )

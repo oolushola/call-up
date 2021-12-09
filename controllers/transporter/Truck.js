@@ -1,4 +1,6 @@
 const TruckModel = require("../../models/transporter/truck");
+const BookingModel = require("../../models/BookingModel");
+const WalletModel = require("../../models/Wallet");
 const { response } = require("../../middleware/response");
 const { validationResult } = require("express-validator");
 const QRCode = require("qrcode");
@@ -28,29 +30,25 @@ cloudinary.config({
 class TruckController {
   static async availableForCallUp(req, res, next) {
     try {
-      const owner = await TruckModel.findOne({ ownedBy: req.userId })
-      let availableForCallUp = []
-      if(owner.trucks.length > 0) {
-        const getTrucks = owner.trucks.map(truckInstance => {
-          if(
-            truckInstance.availableForCallUp && 
-            truckInstance.activationStatus && 
-            truckInstance.verificationStatus) {
+      const owner = await TruckModel.findOne({ ownedBy: req.userId });
+      let availableForCallUp = [];
+      if (owner.trucks.length > 0) {
+        const getTrucks = owner.trucks.map((truckInstance) => {
+          if (
+            truckInstance.availableForCallUp &&
+            truckInstance.activationStatus &&
+            truckInstance.verificationStatus
+          ) {
             availableForCallUp.push({
               _id: truckInstance._id,
-              plateNo: truckInstance.plateNo
-            })
+              plateNo: truckInstance.plateNo,
+            });
           }
-        })
+        });
       }
-      response(
-        res, 200, availableForCallUp, 'trucks available for call up'
-      )
-    }
-    catch(err) {
-      response(
-        res, 500, err.message, 'internal server error', 
-      )
+      response(res, 200, availableForCallUp, "trucks available for call up");
+    } catch (err) {
+      response(res, 500, err.message, "internal server error");
     }
   }
 
@@ -194,6 +192,54 @@ class TruckController {
       }
     } catch (err) {
       response(res, 500, err.message, "internal server error");
+    }
+  }
+
+  static async truckOverview(req, res, next) {
+    try {
+      const totalBookings = await BookingModel.find({
+        ownedBy: req.userId,
+        paymentStatus: true,
+        bookingStatus: true,
+      }).countDocuments();
+      const wallet = await WalletModel.findOne({ userId: req.userId });
+      const fleets = await TruckModel.findOne({ ownedBy: req.userId });
+      const verifiedTrucks = fleets.trucks.filter(
+        (truck) =>
+          truck.verificationStatus === true && truck.activationStatus === true
+      ).length;
+      const totalTrucksInPark = await BookingModel.find({
+        ownedBy: req.userId,
+        bookingStatus: true,
+        paymentStatus: true,
+        $or: [{
+          'holdingBayActivity.inParkStatus': true
+        }, {
+          'holdingBayActivity.outOfParkStatus': false
+        }, {
+          'pregateActivity.inPregate': true
+        }, {
+          'pregateActivity.outOfPregate': false
+        }]
+      })
+        .countDocuments();
+
+      const completedTransactions = wallet.transactionHistory.filter(transaction => {
+        return transaction.transactionStatus === "success"
+      }).length
+      response(
+        res, 200, {
+        bookings: totalBookings,
+        walletBalance: wallet.availableBalance,
+        totalTrucks: verifiedTrucks,
+        trucksInPark: totalTrucksInPark,
+        completedTransactions
+      })
+    }
+    catch (err) {
+      response(
+        res, 500, err.message, 'internal server error'
+      )
     }
   }
 }

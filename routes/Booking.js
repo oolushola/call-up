@@ -16,6 +16,12 @@ BookingRoute.get(
   BookingController.getCallUpPreviews
 )
 
+BookingRoute.get(
+  '/preview-journey-code',
+  isLoggedIn,
+  BookingController.journeyCodeBooking
+)
+
 BookingRoute.post(
   '/book-call-up',
   isLoggedIn,
@@ -38,6 +44,18 @@ BookingRoute.patch(
   '/wallet-transaction-update',
   isLoggedIn,
   BookingController.holdingBayPayment
+)
+
+BookingRoute.get(
+  '/trucks-in-park',
+  isLoggedIn,
+  BookingController.trucksInPark
+)
+
+BookingRoute.get(
+  '/park-booking-activities',
+  isLoggedIn,
+  BookingController.parkBookingActivities
 )
 
 module.exports = BookingRoute

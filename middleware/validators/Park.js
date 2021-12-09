@@ -57,4 +57,11 @@ exports.CHECK_PARK_UPDATE = [
   body('parkStatus')
     .isBoolean()
     .notEmpty(),
+],
+
+exports.CHECK_PARK_ENTRY = [
+  body('journeyCode')
+    .isString()
+    .notEmpty()
+    .trim()
 ]

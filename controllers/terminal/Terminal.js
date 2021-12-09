@@ -20,7 +20,7 @@ class TerminalController {
     try {
       const getTerminals = await TerminalModel.find()
         .select("-__v -createdAt -updatedAt")
-        .populate("parks", "_id name")
+        .populate("parks", "_id name parkType")
         .sort({ name: "asc" });
       response(res, 200, getTerminals, "terminals");
     } catch (err) {
@@ -52,7 +52,7 @@ class TerminalController {
   static async addPark(req, res, next) {
     try {
       const errors = validationResult(req);
-      if(!errors.isEmpty()) {
+      if (!errors.isEmpty()) {
         return response(
           res, 422, errors.mapped(), 'validation failed'
         )
@@ -60,21 +60,21 @@ class TerminalController {
       const terminalId = req.params.terminalId
       const parks = req.body.parks
       const terminal = await TerminalModel.findById(terminalId)
-      if(!terminal) {
+      if (!terminal) {
         return response(
           res, 404, null, 'terminal not found'
         )
       }
       parks.map(park => {
         const checkExists = terminal.parks.find(existingPark => existingPark.toString() === park);
-        if(!checkExists) terminal.parks.push(park)
+        if (!checkExists) terminal.parks.push(park)
       })
       const updateTerminal = await terminal.save()
       response(
         res, 200, updateTerminal, 'park updated'
       )
     }
-    catch(err) {
+    catch (err) {
       response(
         res, 500, err.message, 'internal server error'
       )
@@ -99,7 +99,7 @@ class TerminalController {
   static async removePark(req, res, next) {
     try {
       const errors = validationResult(req);
-      if(!errors) {
+      if (!errors) {
         return response(
           res, 422, errors.mapped(), 'validation error'
         )
@@ -107,28 +107,28 @@ class TerminalController {
       const terminalId = req.params.terminalId
       const parks = req.body.parks
       const terminal = await TerminalModel.findById(terminalId)
-      if(terminal.parks.length === parks.length) {
+      if (terminal.parks.length === parks.length) {
         return response(
           res, 406, null, 'unacceptable request'
         )
       }
       parks.map(park => {
         const checkPark = terminal.parks.findIndex(existingPark => existingPark.toString() === park)
-        if(checkPark >= 0 ) terminal.parks.splice(checkPark, 1)
+        if (checkPark >= 0) terminal.parks.splice(checkPark, 1)
       })
       const updateTerminalParks = await terminal.save()
       response(
         res, 200, updateTerminalParks, 'park removed'
       )
     }
-    catch(err) {
+    catch (err) {
       response(
         res, 500, err.message, 'internal server error'
       )
     }
   }
 
-  static async deleteTerminal(req, res, next) {}
+  static async deleteTerminal(req, res, next) { }
 }
 
 module.exports = TerminalController;
