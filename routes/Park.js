@@ -32,4 +32,43 @@ ParkRoute.get(
   ParkController.userPark
 )
 
+ParkRoute.get(
+  '/grant-access-entry',
+  isLoggedIn,
+  ParkController.verifyJourneyCode
+)
+
+ParkRoute.get(
+  '/verify-park-entry',
+  isLoggedIn,
+  ParkController.verifyGateEntrySerialNo
+)
+
+ParkRoute.get(
+  '/verify-park-exit',
+  isLoggedIn,
+  ParkController.verifyExitSerialNo
+)
+
+ParkRoute.patch(
+  '/grant-park-access',
+  isLoggedIn,
+  validator.CHECK_PARK_ENTRY,
+  ParkController.grantTruckEntry
+)
+
+ParkRoute.patch(
+  '/grant-park-exit',
+  isLoggedIn,
+  ParkController.grantTruckExit
+)
+
+ParkRoute.get(
+  '/park/overview',
+  isLoggedIn,
+  ParkController.parkOverview
+)
+
+
 module.exports = ParkRoute
+

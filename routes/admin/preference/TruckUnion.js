@@ -6,31 +6,42 @@ const { isSuperAdmin, isAdmin, isLoggedIn } = require('../../../middleware/handl
 
 const TruckUnion = express.Router()
 
-TruckUnion.get('/truck-unions', 
+TruckUnion.get(
+  '/union-overview',
+  isLoggedIn,
+  TruckUnionController.unionOverview
+)
+
+TruckUnion.get('/truck-unions',
   isLoggedIn,
   TruckUnionController.allTruckUnions
 )
 
 TruckUnion.get('/truck-union/:truckUnionId',
   isLoggedIn,
+  isAdmin,
   TruckUnionController.getTruckUnion
+)
+
+TruckUnion.get(
+  '/user-truck-union',
+  isLoggedIn,
+  TruckUnionController.getAccountUnion
 )
 
 TruckUnion.post('/truck-union',
   isLoggedIn,
-  isAdmin,
   VALIDATE_TRUCK_UNION,
   TruckUnionController.AddTruckUnion
 )
 
-TruckUnion.put('/truck-union/:truckUnionId', 
+TruckUnion.put('/truck-union/:truckUnionId',
   isLoggedIn,
-  isAdmin,
   VALIDATE_TRUCK_UNION,
   TruckUnionController.updateTruckUnion
 )
 
-TruckUnion.delete('/truck-union/:truckUnionId', 
+TruckUnion.delete('/truck-union/:truckUnionId',
   isLoggedIn,
   isSuperAdmin,
   TruckUnionController.removeTruckUnion

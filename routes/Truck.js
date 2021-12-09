@@ -1,6 +1,6 @@
 const express = require('express')
 const { body } = require('express-validator')
-const {TruckController, uploader } = require('../controllers/transporter/Truck')
+const { TruckController, uploader } = require('../controllers/transporter/Truck')
 const { isLoggedIn } = require('../middleware/handlers')
 const validator = require('../middleware/validators/Trucks')
 
@@ -30,6 +30,12 @@ Truck.post(
   uploader.single('truckImage'),
   validator.ADD_NEW_TRUCK,
   TruckController.addTruck
+)
+
+Truck.get(
+  '/truck/overview',
+  isLoggedIn,
+  TruckController.truckOverview
 )
 
 module.exports = Truck

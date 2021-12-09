@@ -5,7 +5,7 @@ const WalletSchema = new Schema({
   availableBalance: {
     required: true,
     type: Number,
-    default:0
+    default: 0
   },
   lastDeposit: {
     type: Number,
@@ -23,12 +23,12 @@ const WalletSchema = new Schema({
     ref: 'User'
   },
   transactionHistory: [{
-    charges:{
+    charges: {
       type: Number
     },
     transactionStatus: {
       type: String,
-      default: 'pending'
+      default: 'success'
     },
     amount: {
       type: Number
@@ -57,8 +57,28 @@ const WalletSchema = new Schema({
     },
     paymentFor: {
       type: String
+    },
+    ownerPaid: {
+      type: Boolean,
+      default: false
+    },
+    datePaid: {
+      type: Date,
     }
-  }]
+  }],
+  lastReceived: {
+    amount: {
+      type: Number,
+      default: 0
+    },
+    date: {
+      type: Date
+    },
+    percentageIncrement: {
+      type: Number,
+      default: 0
+    }
+  }
 }, {
   timestamps: true
 })

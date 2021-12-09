@@ -44,6 +44,10 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now()
   },
+  union: {
+    type: Schema.Types.ObjectId,
+    ref: 'TruckUnion'
+  }
 }, {
   timestamps: true
 });
