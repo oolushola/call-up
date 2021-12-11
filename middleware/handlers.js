@@ -94,7 +94,8 @@ exports.walletPrivilege = async (req, res, next) => {
     if (checkUserType.userType !== "transporter" &&
       checkUserType.userType !== "park owner" &&
       checkUserType.userType !== "admin" &&
-      checkUserType.userType !== "union"
+      checkUserType.userType !== "union" &&
+      checkUserType.userType !== "terminal"
     ) {
       return response(
         res, 403, null, 'permission denied'

@@ -9,6 +9,7 @@ const BookingCategory = require("./admin/preference/BookingCategory");
 const ParkFeature = require("./admin/preference/ParkFeatures");
 const TruckType = require("./admin/preference/TruckType");
 const TruckLength = require("./admin/preference/TruckLength");
+const Ports = require('./admin/preference/Port')
 
 const AddOnService = require("./admin/finance/AddOnService");
 const TruckCharge = require("./admin/finance/TruckCharge");
@@ -38,7 +39,8 @@ routes.use(process.env.BASE_URL, [
   Terminal,
   AddOnService,
   uploadTdoRoute,
-  BookingRoute
+  BookingRoute,
+  Ports
 ]);
 
 module.exports = routes;
