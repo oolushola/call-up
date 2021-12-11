@@ -5,7 +5,7 @@ const { validationResult } = require("express-validator");
 class TerminalController {
   static async getUserTerminal(req, res, next) {
     try {
-      const terminal = await TerminalModel.find({ ownedBy: req.userId })
+      const terminal = await TerminalModel.findOne({ ownedBy: req.userId })
         .select("-__v -createdAt -updatedAt");
       if (!terminal) {
         return response(res, 404, null, "resource not found");
@@ -69,6 +69,7 @@ class TerminalController {
           res, 404, null, 'record not found'
         )
       }
+      console.log(contact)
       terminalInfo.portId = portId
       terminalInfo.name = name
       terminalInfo.email = email
@@ -153,6 +154,52 @@ class TerminalController {
       const updateTerminalParks = await terminal.save()
       response(
         res, 200, updateTerminalParks, 'park removed'
+      )
+    }
+    catch (err) {
+      response(
+        res, 500, err.message, 'internal server error'
+      )
+    }
+  }
+
+  static async updateDailyCapacity(req, res, next) {
+    try {
+      const dailyCapacity = req.body.dailyCap
+      const terminalId = req.params.terminalId
+      const terminalInfo = await TerminalModel.findById(terminalId)
+      if (!terminalInfo) {
+        return response(
+          res, 404, null, 'record not found'
+        )
+      }
+      terminalInfo.dailyCapacity = dailyCapacity
+      const updatedTerminal = await terminalInfo.save()
+      response(
+        res, 200, updatedTerminal, "changes updated"
+      )
+    }
+    catch (err) {
+      response(
+        res, 500, err.message, 'internal server error'
+      )
+    }
+  }
+
+  static async updateEmptyCapacity(req, res, next) {
+    try {
+      const emptyCapacity = req.body.emptyCap
+      const terminalId = req.params.terminalId
+      const terminalInfo = await TerminalModel.findById(terminalId)
+      if (!terminalInfo) {
+        return response(
+          res, 404, null, 'record not found'
+        )
+      }
+      terminalInfo.emptyCapacity = emptyCapacity
+      const updatedTerminal = await terminalInfo.save()
+      response(
+        res, 200, updatedTerminal, "changes updated"
       )
     }
     catch (err) {

@@ -41,6 +41,18 @@ TerminalRoute.patch(
   TerminalController.addPark
 );
 
+TerminalRoute.patch(
+  "/terminal/:terminalId/daily-capacity",
+  isLoggedIn,
+  TerminalController.updateDailyCapacity
+)
+
+TerminalRoute.patch(
+  "/terminal/:terminalId/empty-capacity",
+  isLoggedIn,
+  TerminalController.updateEmptyCapacity
+)
+
 TerminalRoute.delete(
   "/terminal/:terminalId/remove",
   isLoggedIn,

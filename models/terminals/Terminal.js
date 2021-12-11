@@ -46,9 +46,9 @@ const TerminalSchema = new Schema({
   ],
   emptyCapacity: [{
     shippingLine: {
-      type: Schema.Types.ObjectId
+      type: String
     },
-    _40ftAvailableCapacity: {
+    _40ftAvailable: {
       type: Number,
       default: 0
     },
@@ -56,7 +56,7 @@ const TerminalSchema = new Schema({
       type: Number,
       default: 0
     },
-    _20ftAvailableCapacity: {
+    _20ftAvailable: {
       type: Number,
       default: 0
     },
