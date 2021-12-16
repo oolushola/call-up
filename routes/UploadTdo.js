@@ -12,10 +12,10 @@ uploadTdoRoute.get(
 )
 
 uploadTdoRoute.get(
-  '/pending-match-tdo',
+  '/tdo-uploads',
   isLoggedIn,
   isTerminal,
-  UploadTdoController.getPendingMatchTdo
+  UploadTdoController.getTdoUploads
 )
 
 uploadTdoRoute.post(
@@ -23,6 +23,13 @@ uploadTdoRoute.post(
   isLoggedIn,
   isTerminal,
   UploadTdoController.uploadTdo
+)
+
+uploadTdoRoute.put(
+  '/upload-tdo/:tdoId',
+  isLoggedIn,
+  isTerminal,
+  UploadTdoController.updateUploadTdo
 )
 
 module.exports = uploadTdoRoute

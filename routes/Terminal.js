@@ -61,4 +61,10 @@ TerminalRoute.delete(
   TerminalController.removePark
 );
 
+TerminalRoute.get(
+  '/terminal/booked/truck',
+  isLoggedIn,
+  TerminalController.bookedTerminal
+)
+
 module.exports = TerminalRoute;

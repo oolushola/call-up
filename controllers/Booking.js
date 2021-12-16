@@ -17,7 +17,7 @@ class BookingController {
           "ownedBy terminalId bookingCategoryId parkId stops.parkId",
           "name contact plateNo bookingCategory"
         )
-        .sort({ createdAt: "asc" });
+        .sort({ createdAt: "desc" });
 
       await Promise.all(
         userBookings.map(async (booking) => {
@@ -25,7 +25,7 @@ class BookingController {
           const truckInfo = userTrucks.trucks.find(
             (truck) => truck._id.toString() === booking.truckId.toString()
           );
-          bookingResponse.push({ userBookings, truckInfo });
+          bookingResponse.push({ userBookings: booking, truckInfo });
         })
       );
       response(res, 200, bookingResponse, "booking responses");
