@@ -57,6 +57,10 @@ const BookingSchema = new Schema({
     checkedOut: { type: Date },
     checkedOutBy: { type: Schema.Types.ObjectId }
   },
+  matchStatus: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true
 })

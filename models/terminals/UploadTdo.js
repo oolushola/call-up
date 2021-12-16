@@ -12,24 +12,7 @@ const UploadTdoSchema = new Schema({
     required: true,
     ref: 'Terminal'
   },
-  clearingAgentId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
-  },
-  transNo: {
-    required: true,
-    type: String
-  },
-  containerType: {
-    required: true,
-    type: String
-  },
-  lineOperator: {
-    required: true,
-    type: String
-  },
-  containerNo: {
+  tdoNo: {
     required: true,
     type: String
   },
@@ -37,12 +20,21 @@ const UploadTdoSchema = new Schema({
     required: true,
     type: String
   },
-  weight: {
+  containerCategory: {
     required: true,
-    type: Number
+    type: String
   },
-  location: {
-    type: String    
+  shippingLine: {
+    required: true,
+    type: String
+  },
+  containerNos: {
+    required: true,
+    type: Array
+  },
+  plateNo: {
+    type: String,
+    required: true
   },
   bookingId: {
     type: Schema.Types.ObjectId,
@@ -50,19 +42,17 @@ const UploadTdoSchema = new Schema({
   },
   matchedStatus: {
     type: Boolean,
-    default: false,
+    default: true,
   },
-  callOutStatus: {
+  isCompleted: {
     type: Boolean,
     default: false
   },
   dateMatched: {
-    type: String
+    type: Date,
+    default: Date.now()
   },
   dateCalledOut: {
-    type: String
-  },
-  tdoImage: {
     type: String
   },
 }, {
